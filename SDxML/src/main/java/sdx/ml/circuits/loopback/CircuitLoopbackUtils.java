@@ -10,6 +10,9 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sdx.ml.phedex.pojos.PhedexCircuit;
 
 /**
@@ -17,6 +20,8 @@ import sdx.ml.phedex.pojos.PhedexCircuit;
  *
  */
 public class CircuitLoopbackUtils {
+
+    private final static Logger logger = LoggerFactory.getLogger(CircuitLoopbackUtils.class);
 
 	private static final ScheduledExecutorService loopbackExecutor = Executors.newScheduledThreadPool(16, new ThreadFactory() {
 		final AtomicLong SEQ = new AtomicLong(0L);
@@ -32,10 +37,11 @@ public class CircuitLoopbackUtils {
 		return loopbackExecutor.schedule(new Runnable() {
 			@Override
 			public void run() {
-				System.out.println("Changing status: " + newStatus + " for circuit: " + circuit);
+				logger.info("Changing status {} for circuit: {}", newStatus, circuit);
 				circuit.setStatus(newStatus);
 			}
 		}, delay, unit);
 	}
 
 }
+

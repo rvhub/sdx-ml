@@ -17,6 +17,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sdx.ml.circuits.loopback.CircuitLoopbackUtils;
 import sdx.ml.phedex.dao.PhedexCircuitsHolder;
 import sdx.ml.phedex.pojos.PhedexCircuit;
@@ -25,6 +28,7 @@ import sdx.ml.phedex.pojos.PhedexCircuitRequest.Type;
 
 @Path("/phedex")
 public class PhedexCircuitService {
+    private final static Logger logger = LoggerFactory.getLogger(PhedexCircuitService.class);
 
 	static final PhedexCircuitsHolder circuitHolder = new PhedexCircuitsHolder();
 
@@ -49,13 +53,13 @@ public class PhedexCircuitService {
 			}
 			final PhedexCircuit ret = circuitHolder.saveCircuit(circuit);
 			CircuitLoopbackUtils.changeStatus((ret == null)?circuit:ret, PhedexCircuit.Status.ESTABLISHED, 10, TimeUnit.SECONDS);
-			System.out.println("Create circuit: " + circuit + " --- response: " + ret);
+			logger.info("Create circuit: {} --- response: {}", circuit, ret);
 			return Response.ok(circuit).build();
 		}
 		case TEARDOWN: {
 			final String id = circuitRequest.getId();
 			final PhedexCircuit deleteCircuit = circuitHolder.deleteCircuit(id);
-			System.out.println("Delete circuit: " + deleteCircuit);
+			logger.info("Delete circuit: {}", deleteCircuit);
 			return Response.ok(deleteCircuit).build();
 		}
 		default: {
