@@ -41,6 +41,7 @@ public class PhedexCircuitService {
 			try {
 				circuit.setToIP(InetAddress.getByName("127.0.0.2"));
 				circuit.setFromIP(InetAddress.getByName("127.0.0.3"));
+				circuit.setStatus(PhedexCircuit.Status.REQUESTING);
 			}catch(Throwable t) {
 				t.printStackTrace();
 			}

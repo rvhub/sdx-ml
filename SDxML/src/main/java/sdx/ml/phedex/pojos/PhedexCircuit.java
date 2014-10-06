@@ -7,6 +7,12 @@ import javax.xml.bind.annotation.XmlElement;
 
 public class PhedexCircuit {
 
+	public enum Status {
+		REQUESTING,
+		ESTABLISHED,
+		FAILED
+	}
+
 	@XmlElement(required=true, name="ID")
 	private String id;
 
@@ -27,6 +33,9 @@ public class PhedexCircuit {
 
 	@XmlElement(required=false, name="BANDWIDTH")
 	private long bandwidth;
+
+	@XmlElement(required=false, name="STATUS")
+	private Status status;
 
 	private PhedexCircuit() {
 		// TODO Auto-generated constructor stub
@@ -100,6 +109,14 @@ public class PhedexCircuit {
 		this.bandwidth = bandwidth;
 	}
 
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -131,7 +148,9 @@ public class PhedexCircuit {
 		builder.append("PhedexCircuit [id=").append(id).append(", source=")
 				.append(source).append(", destination=").append(destination)
 				.append(", parameters=").append(parameters).append(", fromIP=")
-				.append(fromIP).append(", toIP=").append(toIP).append("]");
+				.append(fromIP).append(", toIP=").append(toIP)
+				.append(", bandwidth=").append(bandwidth).append(", status=")
+				.append(status).append("]");
 		return builder.toString();
 	}
 

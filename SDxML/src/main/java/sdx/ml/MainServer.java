@@ -43,7 +43,8 @@ public class MainServer {
 
 		try {
 			HttpServer server = startServer();
-					}catch(Throwable t) {
+
+		}catch(Throwable t) {
 			t.printStackTrace();
 		}
 
@@ -57,14 +58,6 @@ public class MainServer {
 		}
 
 
-
-//		final NEResponse allNEsResponse = getAllNEsResponse();
-//		List<NE> result = allNEsResponse.getResult();
-//
-//		for(NE ne: result) {
-//			System.out.println(ne.getIdNetworkElement());
-//			System.out.println(getInterfacesForNE(ne));
-//		}
 	}
 
 }
