@@ -72,7 +72,7 @@
 					</execution>
 				</executions>
 				<configuration>
-					<mainClass>sc14.ml.Main</mainClass>
+					<mainClass>sdx.ml.MainServer</mainClass>
 				</configuration>
 			</plugin>
 		</plugins>

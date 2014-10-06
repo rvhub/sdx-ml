@@ -28,20 +28,22 @@ public class MainServer {
 	}
 
 
-	private static final void startServer() throws IOException {
+	private static final HttpServer startServer() throws IOException {
 		//bind on all intefaces -- this will bind on IPv6 as well
 		URI baseUri = UriBuilder.fromUri("http://0.0.0.0").port(9998).build();
 	    ResourceConfig config = new ResourceConfig(PhedexCircuitService.class);
 	    HttpServer server = GrizzlyHttpServerFactory.createHttpServer(baseUri, config);
 	    server.start();
+	    return server;
 	}
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
+
 		try {
-			startServer();
-		}catch(Throwable t) {
+			HttpServer server = startServer();
+					}catch(Throwable t) {
 			t.printStackTrace();
 		}
 
