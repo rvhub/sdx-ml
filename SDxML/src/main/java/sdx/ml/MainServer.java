@@ -18,12 +18,12 @@ import sdx.ml.phedex.service.PhedexCircuitService;
  * @author ramiro
  *
  */
-public class Main {
+public class MainServer {
 
 	/**
 	 *
 	 */
-	public Main() {
+	public MainServer() {
 
 	}
 
@@ -53,6 +53,8 @@ public class Main {
 		} catch(Throwable t) {
 			t.printStackTrace();
 		}
+
+
 
 //		final NEResponse allNEsResponse = getAllNEsResponse();
 //		List<NE> result = allNEsResponse.getResult();

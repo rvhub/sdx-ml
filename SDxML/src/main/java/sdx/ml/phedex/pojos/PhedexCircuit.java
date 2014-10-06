@@ -1,23 +1,46 @@
 package sdx.ml.phedex.pojos;
 
+import java.net.InetAddress;
 import java.util.Map;
+
+import javax.xml.bind.annotation.XmlElement;
 
 public class PhedexCircuit {
 
+	@XmlElement(required=true, name="ID")
 	private String id;
+
+	@XmlElement(required=false, name="FROM")
 	private String source;
+
+	@XmlElement(required=false, name="TO")
 	private String destination;
+
+	@XmlElement(required=false, name="OPTIONS")
 	private Map<String, String> parameters;
+
+	@XmlElement(required=false, name="FROM_IP")
+	private InetAddress fromIP;
+
+	@XmlElement(required=false, name="TO_IP")
+	private InetAddress toIP;
+
+	@XmlElement(required=false, name="BANDWIDTH")
+	private long bandwidth;
 
 	private PhedexCircuit() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public PhedexCircuit(String id, String source, String destiantion,
+	public static final PhedexCircuit fromCircuitRequest(PhedexCircuitRequest circuitRequest) {
+		return new PhedexCircuit(circuitRequest.getId(), circuitRequest.getSource(), circuitRequest.getDestination(), circuitRequest.getParameters());
+	}
+
+	public PhedexCircuit(String id, String source, String destination,
 			Map<String, String> parameters) {
 		this.id = id;
 		this.source = source;
-		this.destination = destiantion;
+		this.destination = destination;
 		this.parameters = parameters;
 	}
 
@@ -53,11 +76,63 @@ public class PhedexCircuit {
 		this.parameters = parameters;
 	}
 
+	public InetAddress getFromIP() {
+		return fromIP;
+	}
+
+	public void setFromIP(InetAddress fromIP) {
+		this.fromIP = fromIP;
+	}
+
+	public InetAddress getToIP() {
+		return toIP;
+	}
+
+	public void setToIP(InetAddress toIP) {
+		this.toIP = toIP;
+	}
+
+	public long getBandwidth() {
+		return bandwidth;
+	}
+
+	public void setBandwidth(long bandwidth) {
+		this.bandwidth = bandwidth;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof PhedexCircuit))
+			return false;
+		PhedexCircuit other = (PhedexCircuit) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
+	}
+
 	@Override
 	public String toString() {
-		return "PhedexCircuit [id=" + id + ", source=" + source
-				+ ", destination=" + destination + ", parameters=" + parameters
-				+ "]";
+		StringBuilder builder = new StringBuilder();
+		builder.append("PhedexCircuit [id=").append(id).append(", source=")
+				.append(source).append(", destination=").append(destination)
+				.append(", parameters=").append(parameters).append(", fromIP=")
+				.append(fromIP).append(", toIP=").append(toIP).append("]");
+		return builder.toString();
 	}
 
 }
