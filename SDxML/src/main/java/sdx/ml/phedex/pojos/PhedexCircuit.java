@@ -2,6 +2,7 @@ package sdx.ml.phedex.pojos;
 
 import java.net.InetAddress;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import javax.xml.bind.annotation.XmlElement;
 
@@ -37,8 +38,10 @@ public class PhedexCircuit {
 	@XmlElement(required=false, name="STATUS")
 	private Status status;
 
+	final long createTimeNanos;
+
 	private PhedexCircuit() {
-		// TODO Auto-generated constructor stub
+		createTimeNanos = System.nanoTime();
 	}
 
 	public static final PhedexCircuit fromCircuitRequest(PhedexCircuitRequest circuitRequest) {
@@ -47,6 +50,7 @@ public class PhedexCircuit {
 
 	public PhedexCircuit(String id, String source, String destination,
 			Map<String, String> parameters) {
+		this();
 		this.id = id;
 		this.source = source;
 		this.destination = destination;
@@ -115,6 +119,10 @@ public class PhedexCircuit {
 
 	public void setStatus(Status status) {
 		this.status = status;
+	}
+
+	public long getUptime(TimeUnit unit) {
+		return unit.convert(System.nanoTime() - createTimeNanos, TimeUnit.NANOSECONDS);
 	}
 
 	@Override

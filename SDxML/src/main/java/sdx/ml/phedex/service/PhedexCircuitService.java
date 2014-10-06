@@ -2,6 +2,7 @@ package sdx.ml.phedex.service;
 
 import java.net.InetAddress;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -16,6 +17,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import sdx.ml.circuits.loopback.CircuitLoopbackUtils;
 import sdx.ml.phedex.dao.PhedexCircuitsHolder;
 import sdx.ml.phedex.pojos.PhedexCircuit;
 import sdx.ml.phedex.pojos.PhedexCircuitRequest;
@@ -46,6 +48,7 @@ public class PhedexCircuitService {
 				t.printStackTrace();
 			}
 			final PhedexCircuit ret = circuitHolder.saveCircuit(circuit);
+			CircuitLoopbackUtils.changeStatus((ret == null)?circuit:ret, PhedexCircuit.Status.ESTABLISHED, 10, TimeUnit.SECONDS);
 			System.out.println("Create circuit: " + circuit + " --- response: " + ret);
 			return Response.ok(circuit).build();
 		}
