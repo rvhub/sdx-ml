@@ -3,11 +3,11 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.example</groupId>
-	<artifactId>ml-padtec-bridge</artifactId>
+	<groupId>sdx.ml</groupId>
+	<artifactId>sdx-ml-bridge</artifactId>
 	<packaging>jar</packaging>
 	<version>1.0-SNAPSHOT</version>
-	<name>ml-padtec-bridge</name>
+	<name>sdx-ml-bridge</name>
 
 	<dependencyManagement>
 		<dependencies>
