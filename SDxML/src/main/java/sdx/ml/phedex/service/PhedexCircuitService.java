@@ -1,7 +1,7 @@
 package sdx.ml.phedex.service;
 
 import java.net.InetAddress;
-import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import javax.ws.rs.Consumes;
@@ -26,73 +26,72 @@ import sdx.ml.phedex.pojos.PhedexCircuitRequest.Type;
 @Path("/phedex")
 public class PhedexCircuitService {
 
-	static final PhedexCircuitsHolder circuitHolder = new PhedexCircuitsHolder();
+    static final PhedexCircuitsHolder circuitHolder = new PhedexCircuitsHolder();
 
-	public PhedexCircuitService() {
+    public PhedexCircuitService() {
 
-	}
+    }
 
-	@POST
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response circuitRequest(PhedexCircuitRequest circuitRequest){
-		final Type reqType = circuitRequest.getType();
-		switch(reqType) {
-		case CREATE: {
-			final PhedexCircuit circuit = PhedexCircuit.fromCircuitRequest(circuitRequest);
-			try {
-				circuit.setToIP(InetAddress.getByName("127.0.0.2"));
-				circuit.setFromIP(InetAddress.getByName("127.0.0.3"));
-				circuit.setStatus(PhedexCircuit.Status.REQUESTING);
-			}catch(Throwable t) {
-				t.printStackTrace();
-			}
-			final PhedexCircuit ret = circuitHolder.saveCircuit(circuit);
-			CircuitLoopbackUtils.changeStatus((ret == null)?circuit:ret, PhedexCircuit.Status.ESTABLISHED, 10, TimeUnit.SECONDS);
-			System.out.println("Create circuit: " + circuit + " --- response: " + ret);
-			return Response.ok(circuit).build();
-		}
-		case TEARDOWN: {
-			final String id = circuitRequest.getId();
-			final PhedexCircuit deleteCircuit = circuitHolder.deleteCircuit(id);
-			System.out.println("Delete circuit: " + deleteCircuit);
-			return Response.ok(deleteCircuit).build();
-		}
-		default: {
-		}
-		}
-		return Response.status(Status.METHOD_NOT_ALLOWED).build();
-	}
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response circuitRequest(PhedexCircuitRequest circuitRequest) {
+        final Type reqType = circuitRequest.getType();
+        switch (reqType) {
+        case CREATE: {
+            final PhedexCircuit circuit = PhedexCircuit.fromCircuitRequest(circuitRequest);
+            try {
+                circuit.setToIP(InetAddress.getByName("127.0.0.2"));
+                circuit.setFromIP(InetAddress.getByName("127.0.0.3"));
+                circuit.setStatus(PhedexCircuit.Status.REQUESTING);
+            } catch (Throwable t) {
+                t.printStackTrace();
+            }
+            final PhedexCircuit ret = circuitHolder.saveCircuit(circuit);
+            CircuitLoopbackUtils.changeStatus((ret == null) ? circuit : ret, PhedexCircuit.Status.ESTABLISHED, 10,
+                    TimeUnit.SECONDS);
+            System.out.println("Create circuit: " + circuit + " --- response: " + ret);
+            return Response.ok(circuit).build();
+        }
+        case TEARDOWN: {
+            final String id = circuitRequest.getId();
+            final PhedexCircuit deleteCircuit = circuitHolder.deleteCircuit(id);
+            System.out.println("Delete circuit: " + deleteCircuit);
+            return Response.ok(deleteCircuit).build();
+        }
+        default: {
+        }
+        }
+        return Response.status(Status.METHOD_NOT_ALLOWED).build();
+    }
 
+    @DELETE
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteCircuit(final @PathParam("id") String id) {
+        final PhedexCircuit deleteCircuit = circuitHolder.deleteCircuit(id);
+        return Response.ok(deleteCircuit).build();
+    }
 
-	@DELETE
-	@Path("/{id}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response deleteCircuit(final @PathParam("id") String id) {
-		final PhedexCircuit deleteCircuit = circuitHolder.deleteCircuit(id);
-		return Response.ok(deleteCircuit).build();
-	}
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAll(@QueryParam("ID") String id) {
+        if ((id == null) || id.isEmpty()) {
+            Set<PhedexCircuit> circuits = circuitHolder.getAllCircuits();
+            GenericEntity<Set<PhedexCircuit>> allResponse = new GenericEntity<Set<PhedexCircuit>>(circuits) {
+            };
+            return Response.ok(allResponse).build();
+        }
 
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getAll(@QueryParam("ID") String id) {
-		if(id == null || id.isEmpty()) {
-			List<PhedexCircuit> circuits = circuitHolder.getAllCircuits();
-			GenericEntity<List<PhedexCircuit>> allResponse = new GenericEntity<List<PhedexCircuit>>(
-					circuits) {
-			};
-			return Response.ok(allResponse).build();
-		}
+        final PhedexCircuit reqCircuit = circuitHolder.getCircuit(id);
+        return Response.ok(reqCircuit).build();
+    }
 
-		final PhedexCircuit reqCircuit = circuitHolder.getCircuit(id);
-		return Response.ok(reqCircuit).build();
-	}
-
-	@GET
-	@Path("/{id}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getById(final @PathParam("id") String id) {
-		PhedexCircuit circuit = circuitHolder.getCircuit(id);
-		return Response.ok(circuit).build();
-	}
+    @GET
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getById(final @PathParam("id") String id) {
+        PhedexCircuit circuit = circuitHolder.getCircuit(id);
+        return Response.ok(circuit).build();
+    }
 }

@@ -21,6 +21,34 @@
 		</dependencies>
 	</dependencyManagement>
 
+	<repositories>
+		<!-- OpenDaylight releases -->
+		<repository>
+			<id>opendaylight-mirror</id>
+			<name>opendaylight-mirror</name>
+			<url>http://nexus.opendaylight.org/content/groups/public/</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>never</updatePolicy>
+			</releases>
+		</repository>
+		<!-- OpenDaylight snapshots -->
+		<repository>
+			<id>opendaylight-snapshot</id>
+			<name>opendaylight-snapshot</name>
+			<url>http://nexus.opendaylight.org/content/repositories/opendaylight.snapshot/</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+		</repository>
+	</repositories>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.glassfish.jersey.containers</groupId>
@@ -40,6 +68,25 @@
 			<groupId>org.glassfish.jersey.media</groupId>
 			<artifactId>jersey-media-json-jackson</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>org.opendaylight.controller</groupId>
+			<artifactId>sal</artifactId>
+			<version>0.8.1-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.opendaylight.controller</groupId>
+			<artifactId>statistics.northbound</artifactId>
+			<version>0.4.2-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.3</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -82,4 +129,5 @@
 		<jersey.version>2.13</jersey.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
+
 </project>
