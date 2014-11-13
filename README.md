@@ -1,4 +1,4 @@
-ml-sc14
+SDx-ML
 =======
 
-Repository for ML bridge between Phedex and Network Provisioning systems - mostly RESTfull interfaces.
+Repository for ML bridge between Phedex and Network Provisioning.
