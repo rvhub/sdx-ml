@@ -14,11 +14,16 @@ import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import sdx.ml.phedex.pojos.PhedexCircuit;
 import sdx.ml.phedex.pojos.PhedexCircuitRequest;
 import sdx.ml.phedex.pojos.PhedexCircuitRequest.Type;
 
 public class PhedexCircuitServiceClient {
+
+    private final static Logger logger = LoggerFactory.getLogger(PhedexCircuitServiceClient.class);
 
     private static final int DEFAULT_PORT = 80;
     private static final String DEFAULT_URL_PREFIX = "phedex";
@@ -62,7 +67,7 @@ public class PhedexCircuitServiceClient {
         PhedexCircuitRequest pcr = new PhedexCircuitRequest(Type.CREATE, id, from, to, options);
         final Invocation buildPost = request.buildPost(Entity.entity(pcr, MediaType.APPLICATION_JSON_TYPE));
         Response response = buildPost.invoke();
-        System.out.println("CREATE -- Status from server: " + response.getStatus());
+        logger.info("CREATE -- Status from server: {}", response.getStatus());
         return response.readEntity(PhedexCircuit.class);
     }
 
@@ -71,7 +76,7 @@ public class PhedexCircuitServiceClient {
         WebTarget target = client.target(clientURL);
         Builder request = target.request(MediaType.APPLICATION_JSON);
         Response response = request.delete();
-        System.out.println("DELETE -- Status from server: " + response.getStatus());
+        logger.info("DELETE -- Status from server: {}", response.getStatus());
         return response.readEntity(PhedexCircuit.class);
     }
 
@@ -80,7 +85,8 @@ public class PhedexCircuitServiceClient {
         WebTarget target = client.target(clientURL);
         Builder request = target.request(MediaType.APPLICATION_JSON);
         Response response = request.get();
-        System.out.println("GET ALL -- Status from server: " + response.getStatus());
+        logger.info("GET ALL -- Status from server: {}", response.getStatus());
+
         return response.readEntity(new GenericType<Set<PhedexCircuit>>() {
         });
     }
@@ -91,7 +97,8 @@ public class PhedexCircuitServiceClient {
         WebTarget target = client.target(clientURL).path(circuitID);
         Builder request = target.request(MediaType.APPLICATION_JSON);
         Response response = request.get();
-        System.out.println("GET CIRCUIT -- Status from server: " + response.getStatus());
+        logger.info("GET CIRCUIT -- Status from server: {}", response.getStatus());
+
         return response.readEntity(PhedexCircuit.class);
     }
 
