@@ -61,45 +61,75 @@ public class PhedexCircuitServiceClient {
     }
 
     public PhedexCircuit createCircuit(String id, String from, String to, Map<String, String> options) {
-        Client client = ClientBuilder.newClient();
-        WebTarget target = client.target(clientURL);
-        Builder request = target.request(MediaType.APPLICATION_JSON);
-        PhedexCircuitRequest pcr = new PhedexCircuitRequest(Type.CREATE, id, from, to, options);
-        final Invocation buildPost = request.buildPost(Entity.entity(pcr, MediaType.APPLICATION_JSON_TYPE));
-        Response response = buildPost.invoke();
-        logger.info("CREATE -- Status from server: {}", response.getStatus());
-        return response.readEntity(PhedexCircuit.class);
+        Client client = null;
+        try {
+            client = ClientBuilder.newClient();
+            WebTarget target = client.target(clientURL);
+            Builder request = target.request(MediaType.APPLICATION_JSON);
+            PhedexCircuitRequest pcr = new PhedexCircuitRequest(Type.CREATE, id, from, to, options);
+            final Invocation buildPost = request.buildPost(Entity.entity(pcr, MediaType.APPLICATION_JSON_TYPE));
+            Response response = buildPost.invoke();
+            logger.info("CREATE -- Status from server: {}", response.getStatus());
+            return response.readEntity(PhedexCircuit.class);
+        } finally {
+            closeClientIgnoringExceptions(client);
+        }
+
     }
 
     public PhedexCircuit deleteCircuit(String id) {
-        Client client = ClientBuilder.newClient();
-        WebTarget target = client.target(clientURL);
-        Builder request = target.request(MediaType.APPLICATION_JSON);
-        Response response = request.delete();
-        logger.info("DELETE -- Status from server: {}", response.getStatus());
-        return response.readEntity(PhedexCircuit.class);
+        Client client = null;
+        try {
+            client = ClientBuilder.newClient();
+            WebTarget target = client.target(clientURL);
+            Builder request = target.request(MediaType.APPLICATION_JSON);
+            Response response = request.delete();
+            logger.info("DELETE -- Status from server: {}", response.getStatus());
+            return response.readEntity(PhedexCircuit.class);
+        } finally {
+            closeClientIgnoringExceptions(client);
+        }
     }
 
     public Set<PhedexCircuit> getAllCircuits() {
-        Client client = ClientBuilder.newClient();
-        WebTarget target = client.target(clientURL);
-        Builder request = target.request(MediaType.APPLICATION_JSON);
-        Response response = request.get();
-        logger.info("GET ALL -- Status from server: {}", response.getStatus());
+        Client client = null;
+        try {
+            client = ClientBuilder.newClient();
+            WebTarget target = client.target(clientURL);
+            Builder request = target.request(MediaType.APPLICATION_JSON);
+            Response response = request.get();
+            logger.info("GET ALL -- Status from server: {}", response.getStatus());
 
-        return response.readEntity(new GenericType<Set<PhedexCircuit>>() {
-        });
+            return response.readEntity(new GenericType<Set<PhedexCircuit>>() {
+            });
+        } finally {
+            closeClientIgnoringExceptions(client);
+        }
     }
 
     public PhedexCircuit getCircuit(String circuitID) {
         Objects.requireNonNull(circuitID, "Null circuitID");
-        Client client = ClientBuilder.newClient();
-        WebTarget target = client.target(clientURL).path(circuitID);
-        Builder request = target.request(MediaType.APPLICATION_JSON);
-        Response response = request.get();
-        logger.info("GET CIRCUIT -- Status from server: {}", response.getStatus());
+        Client client = null;
+        try {
+            client = ClientBuilder.newClient();
+            WebTarget target = client.target(clientURL).path(circuitID);
+            Builder request = target.request(MediaType.APPLICATION_JSON);
+            Response response = request.get();
+            logger.info("GET CIRCUIT -- Status from server: {}", response.getStatus());
 
-        return response.readEntity(PhedexCircuit.class);
+            return response.readEntity(PhedexCircuit.class);
+        } finally {
+            closeClientIgnoringExceptions(client);
+        }
     }
 
+    private static final void closeClientIgnoringExceptions(Client client) {
+        if (client != null) {
+            try {
+                client.close();
+            } catch (Throwable t) {
+                logger.trace("Exception closing client {} Cause: ", client, t);
+            }
+        }
+    }
 }
